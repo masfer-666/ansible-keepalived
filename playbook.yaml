@@ -4,9 +4,10 @@
   become: true
   become_method: sudo
   vars:
-    vip: 10.20.20.23
+    vip_ip: "{{ hostvars['vip']['ansible_host'] }}"
     master_ip: "{{ hostvars['master']['ansible_host'] }}"
-    backup_ip: "{{ hostvars['backup']['ansible_host'] }}"
+    backup1_ip: "{{ hostvars['backup1']['ansible_host'] }}"
+    backup2_ip: "{{ hostvars['backup2']['ansible_host'] }}"
     interface: "{{ ansible_default_ipv4.interface }}"
   tasks:
     - name: Install required packages
@@ -31,13 +32,21 @@
         backup: true
       when: inventory_hostname == 'master'
 
-    - name: Create keepalived.conf for backup
+    - name: Create keepalived.conf for backup1
       ansible.builtin.template:
-        src: backup.conf
+        src: backup1.conf
         dest: /etc/keepalived/keepalived.conf
         mode: 0644
         backup: true
-      when: inventory_hostname == 'backup'
+      when: inventory_hostname == 'backup1'
+
+    - name: Create keepalived.conf for backup2
+      ansible.builtin.template:
+        src: backup2.conf
+        dest: /etc/keepalived/keepalived.conf
+        mode: 0644
+        backup: true
+      when: inventory_hostname == 'backup2'
 
     - name: Reload sysctl
       ansible.builtin.command: sysctl --system
