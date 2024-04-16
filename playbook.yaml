@@ -4,7 +4,7 @@
   become: true
   become_method: sudo
   vars:
-    vip_ip: 192.168.1.63
+    vip: 192.168.1.63
     master_ip: "{{ hostvars['master']['ansible_host'] }}"
     backup1_ip: "{{ hostvars['backup1']['ansible_host'] }}"
     backup2_ip: "{{ hostvars['backup2']['ansible_host'] }}"
